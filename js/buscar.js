@@ -36,16 +36,16 @@ function imprimir(data, nome, descricao, gamers, urlAssistir, urlImagem, id){
                 <div class="assistir">
                         <a class="assistirItem"> <img src="${urlAssistir}" alt=""> Assistir </a>
                 </div>
-            </div>`
-        console.log(data, nome, descricao, urlImagem)
-    
+            </div>
+            `
 }
 
 function buscaGamers(gamers){
-   var games = document.getElementsByClassName("gamers")
+   var games = "";
     gamers.forEach((element => {
-        games.innerHTML += `
-        <div class="gamerItem">${element}</div>
+        games += `
+        <div class="gamerItem">@${element}</div>
         `
     }))
+    return games
 }
