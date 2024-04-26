@@ -1,51 +1,37 @@
-async function buscar(){
-    console.log("Passei por aqui!")
-    var resposta = await fetch("https://660f44b3356b87a55c510e31.mockapi.io/agendas")
-    console.log("Resposta: ", resposta)
-    if(resposta.ok){
-        var dados = await resposta.json()
-        console.log("Dados: ", dados);
-        dados.forEach(element => {
-            imprimir(element.dataJogo, element.nome, element.descricao, element.gamers, element.urlAssistir, element.urlImagem, element.id);
-        });
-    }
-}
+async function buscar() {
+    const resposta = await fetch("https://660f44b0356b87a55c510db2.mockapi.io/agendas");
+    const respostaDadosAgenda = await resposta.json();
 
-buscar()
+    console.log("Resposta: ", respostaDadosAgenda);
 
-function imprimir(data, nome, descricao, gamers, urlAssistir, urlImagem, id){
-    console.log("Passei pela impressão!")
-    var games = document.getElementById("cards_games")
-    games.innerHTML += `
-    <div class="cardItem">
+    const cards = document.getElementById("cards_games");
+
+    cards.innerHTML = respostaDadosAgenda.map((itemAgenda) => {
+        var dataAgenda = new Date(itemAgenda.dataJogo);
+            return `
+            <div class="cardItem">
                 <div class="dataGame"> 
-                    <img src="../imagens/calendar-solid.svg" alt=""> ${data}
+                    <img src="../imagens/calendar-solid.svg" alt=""> 
+                    ${dataAgenda.getDay()}/${dataAgenda.getMonth()}/${dataAgenda.getFullYear()} 
                 </div>
-                <img class="img-background" src="${urlImagem}" alt="">
+                <img class="img-background" src="${itemAgenda.urlImagem}" alt="">
                 <div class="descricao">
-                    <p> <strong>${nome}</strong> </p>
-                    <p> ${descricao} </p>
+                    <p> <strong>${itemAgenda.nome} </strong></p>
+                    <p> ${itemAgenda.descricao} </p>
                     <p><strong>Gamers: </strong></p>
-
                     <div class="gamers">
-                        ${buscaGamers(gamers)}
-                    </div>
-
-                  
+                    ${itemAgenda.gamers.map((gamerItem) => {
+                        return `<div class="gamerItem">@${gamerItem}</div>`
+                        }).join('')
+                    }
+                </div>
                 </div>  
                 <div class="assistir">
-                        <a class="assistirItem"> <img src="${urlAssistir}" alt=""> Assistir </a>
+                    <a class="assistirItem"> <img src="../imagens/youtube.svg" alt=""> Assistir </a>
                 </div>
             </div>
-            `
+           `
+    }).join((''));
 }
 
-function buscaGamers(gamers){
-   var games = "";
-    gamers.forEach((element => {
-        games += `
-        <div class="gamerItem">@${element}</div>
-        `
-    }))
-    return games
-}
+buscar();
